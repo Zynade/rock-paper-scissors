@@ -12,37 +12,65 @@ function playRound(playerSelection, computerSelection) {
 
 	playerSelection = playerSelection.toLowerCase();
 
-	if (playerSelection === "rock") {
-		if (computerSelection === "rock") {
-			return "Rock and rock. Draw";
-		} else if (computerSelection === "paper") {
-			computerPoints++;
-			return "Paper beats rock. Computer wins!";
-		} else {
-			playerPoints++;
-			return "Rock beats scissors. You win!";
-		}
-	} else if (playerSelection === "paper") {
-		if (computerSelection === "rock") {
-			playerPoints++;
-			return "Paper beats rock. You win!";
-		} else if (computerSelection === "paper") {
-			return "Paper and paper. Draw";
-		} else {
-			computerPoints++;
-			return "Scissors beats paper. Computer wins!";
-		}
-	} else {
-		if (computerSelection === "rock") {
-			computerPoints++;
-			return "Rock beats scissors. Computer wins!";
-		} else if (computerSelection === "paper") {
-			playerPoints++;
-			return "Scissors beats paper. You win!";
-		} else {
-			return "Scissors and scissors. Draw";
+	// if (playerSelection === "rock") {
+	// 	if (computerSelection === "rock") {
+	// 		return "Rock and rock. Draw";
+	// 	} else if (computerSelection === "paper") {
+	// 		computerPoints++;
+	// 		return "Paper beats rock. Computer wins!";
+	// 	} else {
+	// 		playerPoints++;
+	// 		return "Rock beats scissors. You win!";
+	// 	}
+	// } else if (playerSelection === "paper") {
+	// 	if (computerSelection === "rock") {
+	// 		playerPoints++;
+	// 		return "Paper beats rock. You win!";
+	// 	} else if (computerSelection === "paper") {
+	// 		return "Paper and paper. Draw";
+	// 	} else {
+	// 		computerPoints++;
+	// 		return "Scissors beats paper. Computer wins!";
+	// 	}
+	// } else {
+	// 	if (computerSelection === "rock") {
+	// 		computerPoints++;
+	// 		return "Rock beats scissors. Computer wins!";
+	// 	} else if (computerSelection === "paper") {
+	// 		playerPoints++;
+	// 		return "Scissors beats paper. You win!";
+	// 	} else {
+	// 		return "Scissors and scissors. Draw";
+	// 	}
+	// }
+
+	if ((playerSelection == 'rock' && computerSelection == 'scissors') ||
+		(playerSelection == 'scissors' && computerSelection == 'paper') ||
+		(playerSelection == 'paper' && computerSelection == 'rock')) {
+
+		playerPoints++;
+		result = `${playerSelection} beats ${computerSelection}. You win! <br><br>Your score: ${playerPoints} <br> Computer score: ${computerPoints}`;
+
+		if (playerPoints == 5) {
+			result += `<br><br>You have won the game! Congratulations.`;
+			disableButtons();
 		}
 	}
+
+	else if (playerSelection === computerSelection) {
+		result = `${playerSelection} and ${computerSelection}. It's a draw! <br><br>Your score: ${playerPoints} <br> Computer score: ${computerPoints}`;
+	}
+
+	else {
+		computerPoints++;
+		result = `${computerSelection} beats ${playerSelection}. Computer wins! <br><br>Your score: ${playerPoints} <br> Computer score: ${computerPoints}`;
+	
+		if (computerPoints === 5) {
+			result += `<br><br>Computer has won the game. Better luck next time!`;
+		}
+	}
+
+	document.getElementById('result').innerHTML = result;
 }
 
 function isValidSelection(selection) {
@@ -52,32 +80,49 @@ function isValidSelection(selection) {
 	return true;
 }
 
-function game() {
-	// Main game loop
-	for (let i = 1; i < 6; i++) {
-		console.log(`Round ${i}:`);
-
-		playerSelection = prompt("Your move: ");
-		while (!isValidSelection(playerSelection)) {
-			playerSelection = prompt("Invalid selection! Please choose a valid shape.");
-		}
-		computerSelection = computerPlay();
-
-		console.log(`Your play: ${playerSelection},  Computer's play: ${computerSelection}`);
-		console.log(playRound(playerSelection, computerSelection));
-		console.log(
-			`Your score: ${playerPoints},  Computer's score: ${computerPoints}`
-		);
-		console.log('\n');
-	}
-
-	if (computerPoints > playerPoints) {
-		console.log("Computer has won the game. Better luck next time!");
-	} else if (playerPoints > computerPoints) {
-		console.log("You have won the game! Congratulations.");
-	} else {
-		console.log("The game was a draw! Thank you for playing.");
-	}
+function disableButtons() {
+	buttons.forEach((button) => {
+		button.disabled = true;
+	})
 }
 
-game();
+// function game() {
+// 	// Main game loop
+// 	for (let i = 1; i < 6; i++) {
+// 		console.log(`Round ${i}:`);
+
+// 		playerSelection = prompt("Your move: ");
+// 		while (!isValidSelection(playerSelection)) {
+// 			playerSelection = prompt("Invalid selection! Please choose a valid shape.");
+// 		}
+// 		computerSelection = computerPlay();
+
+// 		console.log(`Your play: ${playerSelection},  Computer's play: ${computerSelection}`);
+// 		console.log(playRound(playerSelection, computerSelection));
+// 		console.log(
+// 			`Your score: ${playerPoints},  Computer's score: ${computerPoints}`
+// 		);
+// 		console.log('\n');
+// 	}
+
+// 	if (computerPoints > playerPoints) {
+// 		console.log("Computer has won the game. Better luck next time!");
+// 	} else if (playerPoints > computerPoints) {
+// 		console.log("You have won the game! Congratulations.");
+// 	} else {
+// 		console.log("The game was a draw! Thank you for playing.");
+// 	}
+// }
+
+// game();
+
+const buttons = document.querySelectorAll('.btn');
+buttons.forEach(function (button) {
+	button.addEventListener('click', () => {
+		const playerSelection = button.value;
+		while (!isValidSelection(playerSelection)) {
+			playerSelection = alert("Invalid selection! Please choose a valid button.");
+		}
+		playRound(playerSelection, computerPlay());
+	})
+})
